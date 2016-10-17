@@ -81,6 +81,7 @@ GET     /cart/
             "discount":
             "total":
         }
+    
     notes
         * customer may doesn't have cart
 
@@ -121,6 +122,7 @@ GET     /order/status
                 }
             ]
         }
+    
     notes
         * status = {submitted, shipped, delivered, invalid}
 
@@ -136,6 +138,7 @@ PUT     /order/status
             "status":
             "order_date"
         }
+    
     notes
         * status = {shipped, invalid}
 
@@ -186,3 +189,56 @@ GET     /order
             "discount":
             "total":
         }
+
+==========================================================================
+
+POST    /order
+    req {"customerId", "name", "phone", "email", "address"}
+    res
+        InvalidResource
+        {
+            "order": {
+                "id":
+                "status":
+                "order_date":
+                "name":
+                "phone":
+                "email":
+                "address":
+                "proof":
+            },
+            "customer": {
+                "id":
+                "name":
+            },
+            "coupon": {
+                "id":
+                "name":
+                "start_valid_date":
+                "end_valid_date":
+                "stock":
+                "type":
+                "amount":
+            },
+            "order_item": [
+                {
+                    "id":
+                    "name":
+                    "price":
+                    "stock":
+                    "quantity":
+                }
+            ],
+            "subtotal":
+            "discount":
+            "total":
+        }
+
+    notes
+        - delete cart and cart_item of customer.id
+        * "status" default value "submitted"
+        * shipment data can different from username data : name, phone, email, address
+        * while reviewing order, product / coupon can be taken by others, so
+            - check coupon validity and availability
+            - check product availability
+            - update(decrease) inventory product and coupon
