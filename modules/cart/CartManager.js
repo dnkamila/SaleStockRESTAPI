@@ -11,5 +11,9 @@ module.exports = function(CartRepository) {
         return CartRepository.addCoupon(customerId, couponId);
     };
 
+    CartManager.getCart = function(customerId) {
+        return CartRepository.getCart(customerId);
+    };
+
     return CartManager;
 };

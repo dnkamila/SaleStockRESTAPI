@@ -54,5 +54,25 @@ module.exports = function (CartManager) {
             });
     });
 
+    router.get('/:customerId', function(req, res) {
+        req.checkParams('customerId', 'customerId is required and must be an integer').notEmpty().isInt();
+
+        req.asyncValidationErrors()
+            .then(function() {
+                var customerId = req.params.customerId;
+
+                return CartManager.getCart(customerId)
+                    .then(function(cart) {
+                        return res.json(cart);
+                    })
+                    .catch(function(err) {
+                        return errorHandler(res, err);
+                    });
+            })
+            .catch(function(err) {
+                return errorHandler(res, err);
+            });
+    });
+
     return router;
 };

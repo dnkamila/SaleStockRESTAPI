@@ -4,6 +4,10 @@ var util = require('../../util');
 module.exports = function (db) {
     var CartRepository = {};
 
+    var CustomerRepository = require('../customer/CustomerRepository')(db);
+    var CouponRepository = require('../coupon/CouponRepository')(db);
+    var ProductRepository = require('../product/ProductRepository')(db);
+
     CartRepository.addItem = function(customerId, productId, quantity) {
         return db('cart_item')
             .insert({customer_id: customerId, product_id: productId, quantity: quantity})
@@ -96,6 +100,30 @@ module.exports = function (db) {
                 };
             });
     }
+
+    CartRepository.getCart = function(customerId) {
+        var cart = {};
+
+        return CustomerRepository.getCustomer(customerId)
+            .then(function(customer) {
+                cart.customer = customer;
+
+                return CouponRepository.getCouponByCustomerId(customerId)
+                    .then(function(coupon) {
+                        cart.coupon = coupon;
+
+                        return ProductRepository.getCartItemsByCustomerId(customerId)
+                            .then(function(cartItems) {
+                                cart.cart_item = cartItems;
+                                cart.subtotal = util.calculateSubtotal(cartItems);
+                                cart.discount = util.calculateDiscount(cart.subtotal, coupon);
+                                cart.total = util.calculateTotal(cart.subtotal, cart.discount);
+
+                                return cart;
+                            });
+                    });
+            });
+    };
 
     return CartRepository;
 };
