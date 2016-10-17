@@ -21,3 +21,86 @@ POST    /cart/addItem
             },
             "quantity":
         }
+
+==========================================================================
+
+POST    /cart/addCoupon
+    req {"customerId":, "couponId":}
+    res
+        InvalidResource
+        {
+            "customer":
+            {
+                "id":
+                "name":
+            },
+            "coupon":
+            {
+                "id":
+                "name":
+                "start_valid_date":
+                "end_valid_date":
+                "stock":
+                "type":
+                "amount":
+            }
+        }
+
+==========================================================================
+
+GET     /cart/
+    req {"customerId":}
+    res
+        {
+            "customer": 
+            {
+                "id":,
+                "name":
+            },
+            "coupon":
+            {
+                "id":
+                "name":
+                "start_valid_date":
+                "end_valid_date":
+                "stock":
+                "type":
+                "amount":
+            },
+            "cart_item": 
+            [
+                {
+                    "id":
+                    "name":
+                    "price":
+                    "stock":
+                    "quantity"
+                }
+            ],
+            "subtotal":
+            "discount":
+            "total":
+        }
+    notes
+        * customer may doesn't have cart
+
+==========================================================================
+
+GET     /order/customer
+    req {"customerId"}
+    res 
+        {
+            "customer":
+            {
+                "id":
+                "name": "kamila"
+            },
+            "orders":
+            [
+                {
+                    "id":
+                    "status":
+                    "order_date":
+                }
+            ]
+        }
