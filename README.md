@@ -19,4 +19,4 @@ Missing
 [] testing for Order API
 
 Tested in
-14.04.1-Ubuntu x86_64 GNU/Linux
+14.04.1-Ubuntu x86_64 GNU/Linux && Express + Node.js && PostgreSQL
