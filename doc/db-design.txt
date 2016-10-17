@@ -1,0 +1,98 @@
+DATABASE
+
+customer
+
+id      : bigserial
+name    : varchar(50)
+phone   : varchar(15)
+email   : varchar(50)
+address : varchar(100)
+
+notes
+    * primary key(id)
+    * unique(email)
+
+==========================================================================
+
+product
+
+id		: bigserial
+name	: varchar(50)
+price	: int
+stock	: int
+
+notes
+    * primary key(id)
+
+==========================================================================
+
+coupon
+
+id 					: bigserial
+name                : varchar(25)
+start_valid_date	: date
+end_valid_date		: date
+stock   			: int
+type    			: varchar(10) [percentage, nominal]
+amount				: int
+
+notes
+    * primary key(id)
+
+==========================================================================
+
+cart
+
+customer_id : bigint
+coupon_id   : bigint
+
+notes
+    * primary key(customer_id)
+    * foreign key(customer_id, customer.id)
+    * foreign key(coupon_id, coupon.id)
+
+==========================================================================
+
+cart_item
+
+customer_id : bigint
+product_id  : bigint
+quantity    : int
+
+notes
+    * primary key(customer_id, product_id)
+    * foreign key(customer_id, customer.id)
+    * foreign key(product_id, product.id)
+
+==========================================================================
+
+order
+
+id 			: bigserial
+customer_id : bigint
+coupon_id	: bigint
+status 		: varchar(10) [submitted, shipped, delivered, invalid]
+order_date  : date
+name        : varchar(25)
+phone       : varchar(15)
+email       : varchar(50)
+address     : varchar(100)
+proof       : varchar(50)
+
+notes
+    * primary key(id)
+    * foreign key(customer_id, customer.id)
+    * foreign key(coupon_id, coupon.id)
+
+==========================================================================
+
+order_item
+
+order_id 	: bigint
+product_id 	: bigint
+quantity	: int
+
+notes
+    * primary key(order_id, product_id)
+    * foreign key(order_id, order.id)
+    * foreign key(product_id, product.id)
