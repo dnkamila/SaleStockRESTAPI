@@ -32,5 +32,27 @@ module.exports = function (CartManager) {
             });
     });
 
+    router.post('/addCoupon', function(req, res) {
+        req.checkBody('customerId', 'customerId is required and must be an integer').notEmpty().isInt();
+        req.checkBody('couponId', 'couponId is required and must be an integer').notEmpty().isInt();
+
+        req.asyncValidationErrors()
+            .then(function() {
+                var customerId = req.body.customerId;
+                var couponId = req.body.couponId;
+
+                return CartManager.addCoupon(customerId, couponId)
+                    .then(function(cartCoupon) {
+                        return res.json(cartCoupon);
+                    })
+                    .catch(function(err) {
+                        return errorHandler(res, err);
+                    });
+            })
+            .catch(function(err) {
+                return errorHandler(res, err);
+            });
+    });
+
     return router;
 };

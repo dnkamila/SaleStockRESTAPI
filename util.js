@@ -4,7 +4,6 @@ var ResourceNotFound = require('./errors/ResourceNotFound');
 var DuplicateData = require('./errors/DuplicateData');
 var InvalidResource = require('./errors/InvalidResource');
 
-
 module.exports.errorHandler = function(res, err) {
     console.log(err);
     if (Array.isArray(err))
@@ -17,4 +16,8 @@ module.exports.errorHandler = function(res, err) {
         res.status(409).json({message: err.message});
     else
         res.status(500).json({message: 'Internal server error'});
+};
+
+module.exports.getStandardDate = function(date) {
+    return date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
 };

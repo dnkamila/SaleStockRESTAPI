@@ -1,4 +1,5 @@
 var TAG = "CartRepository";
+var util = require('../../util');
 
 module.exports = function (db) {
     var CartRepository = {};
@@ -24,15 +25,15 @@ module.exports = function (db) {
                 'cu.name as customer_name',
                 'p.id as product_id',
                 'p.name as product_name',
-                'p.price as price',
-                'p.stock as stock',
+                'p.price',
+                'p.stock',
                 'ci.quantity')
             .where({
                 'customer_id': customerId,
                 'product_id': productId
             })
             .then(function(data) {
-                if(!data[0]) return Promise.reject(new ResourceNotFound("Cart Item with customerId " + customerId + " and productId " + productId + " is not found"));
+                if(!data[0]) return Promise.reject(new ResourceNotFound("Cart item with customerId " + customerId + " and productId " + productId + " is not found"));
                 return {
                     "customer": {
                         "id": data[0].customer_id,
@@ -45,6 +46,53 @@ module.exports = function (db) {
                         "stock": data[0].stock
                     },
                     "quantity": data[0].quantity
+                };
+            });
+    }
+
+    CartRepository.addCoupon = function(customerId, couponId) {
+        return db('cart')
+            .insert({customer_id: customerId, coupon_id: couponId})
+            .returning(['customer_id'])
+            .then(function(data) {
+                return checkAddCoupon(data[0].customer_id)
+                    .then(function(cartCoupon) {
+                        return cartCoupon;
+                    });
+            });
+    };
+
+    function checkAddCoupon(customerId) {
+        return db('cart as c')
+            .join('customer as cu', 'customer_id', '=', 'cu.id')
+            .join('coupon as co', 'coupon_id', '=', 'co.id')
+            .select(
+                'cu.id as customer_id',
+                'cu.name as customer_name',
+                'co.id as coupon_id',
+                'co.name as coupon_name',
+                'co.start_valid_date',
+                'co.end_valid_date',
+                'co.stock',
+                'co.type',
+                'co.amount')
+            .where('customer_id', customerId)
+            .then(function(data) {
+                if(!data[0]) return Promise.reject(new ResourceNotFound("Cart coupon with customerId " + customerId + " is not found"));
+                return {
+                    "customer": {
+                        "id": data[0].customer_id,
+                        "name": data[0].customer_name
+                    },
+                    "coupon": {
+                        "id": data[0].coupon_id,
+                        "name": data[0].coupon_name,
+                        "start_valid_date": util.getStandardDate(data[0].start_valid_date),
+                        "end_valid_date": util.getStandardDate(data[0].end_valid_date),
+                        "stock": data[0].stock,
+                        "type": data[0].type,
+                        "amount": data[0].amount
+                    }
                 };
             });
     }

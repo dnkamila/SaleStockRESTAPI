@@ -7,5 +7,9 @@ module.exports = function(CartRepository) {
         return CartRepository.addItem(customerId, productId, quantity);
     };
 
+    CartManager.addCoupon = function(customerId, couponId) {
+        return CartRepository.addCoupon(customerId, couponId);
+    };
+
     return CartManager;
 };
