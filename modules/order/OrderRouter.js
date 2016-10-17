@@ -67,5 +67,25 @@ module.exports = function (OrderManager) {
             });
     });
 
+    router.get('/:orderId', function(req, res) {
+        req.checkParams('orderId', 'orderId is required and must be an integer').notEmpty().isInt();
+
+        req.asyncValidationErrors()
+            .then(function() {
+                var orderId = req.params.orderId;
+
+                return OrderManager.getOrderDetail(orderId)
+                    .then(function(order) {
+                        return res.json(order);
+                    })
+                    .catch(function(err) {
+                        return errorHandler(res, err);
+                    });
+            })
+            .catch(function(err) {
+                return errorHandler(res, err);
+            });
+    });
+
     return router;
 };

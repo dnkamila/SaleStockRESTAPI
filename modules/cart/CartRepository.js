@@ -112,7 +112,7 @@ module.exports = function (db) {
                     .then(function(coupon) {
                         cart.coupon = coupon;
 
-                        return ProductRepository.getCartItemsByCustomerId(customerId)
+                        return ProductRepository.getCartItems(customerId)
                             .then(function(cartItems) {
                                 cart.cart_item = cartItems;
                                 cart.subtotal = util.calculateSubtotal(cartItems);

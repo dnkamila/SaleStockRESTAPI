@@ -15,5 +15,9 @@ module.exports = function(OrderRepository) {
         return OrderRepository.updateStatus(orderId, status);
     };
 
+    OrderManager.getOrderDetail = function(orderId) {
+        return OrderRepository.getOrderDetail(orderId);
+    };
+
     return OrderManager;
 };

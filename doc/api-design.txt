@@ -137,4 +137,52 @@ PUT     /order/status
             "order_date"
         }
     notes
-        * status = {shipped, invalid}        
+        * status = {shipped, invalid}
+
+==========================================================================
+
+GET     /order
+    req {"orderId"}
+    res 
+        ResourceNotFound
+        {
+            "order":
+            {
+                "id":
+                "status":
+                "order_date":
+                "name":
+                "phone":
+                "email":
+                "address":
+                "proof":
+            },
+            "customer":
+            {
+                "id":
+                "name":
+            },
+            "coupon":
+            {
+                "id":
+                "name":
+                "start_valid_date":
+                "end_valid_date":
+                "stock":
+                "type":
+                "amount":
+            },
+            "order_item":
+            [
+                {
+                    "id":
+                    "name":
+                    "price":
+                    "stock":
+                    "quantity"
+                }
+            ],
+            "subtotal":
+            "discount":
+            "total":
+        }
