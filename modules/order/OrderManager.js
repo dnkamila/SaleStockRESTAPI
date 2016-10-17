@@ -19,5 +19,9 @@ module.exports = function(OrderRepository) {
         return OrderRepository.getOrderDetail(orderId);
     };
 
+    OrderManager.createOrder = function(customerId, name, phone, email, address) {
+        return OrderRepository.createOrder(customerId, name, phone, email, address);
+    };
+
     return OrderManager;
 };

@@ -23,5 +23,9 @@ module.exports = function (db) {
             });
     };
 
+    ProductRepository.decreaseProductsQuantity = function(orderItems) {
+
+    };
+
     return ProductRepository;
 };

@@ -125,5 +125,9 @@ module.exports = function (db) {
             });
     };
 
+    CartRepository.deleteCart = function(customerId) {
+
+    };
+
     return CartRepository;
 };

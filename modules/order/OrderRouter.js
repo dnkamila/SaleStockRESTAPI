@@ -1,6 +1,8 @@
 var TAG = "OrderRouter";
 
 var express = require('express');
+var util = require('../../util');
+var errorHandler = util.errorHandler;
 
 module.exports = function (OrderManager) {
     var router = express.Router();
@@ -86,6 +88,35 @@ module.exports = function (OrderManager) {
                 return errorHandler(res, err);
             });
     });
+
+    router.post('/', function(req, res) {
+        req.checkBody('customerId', 'customerId is required and must be an integer').notEmpty().isInt();
+        req.checkBody('name', 'name is required').notEmpty();
+        req.checkBody('phone', 'name is required').notEmpty(); //valide phone number
+        req.checkBody('email', 'name is required').notEmpty(); //valide email address
+        req.checkBody('address', 'name is required').notEmpty();
+
+        req.asyncValidationErrors()
+            .then(function() {
+                var customerId = req.body.customerId;
+                var name = req.body.name;
+                var phone = req.body.phone;
+                var email = req.body.email;
+                var address = req.body.address;
+
+                return OrderManager.createOrder(customerId, name, phone, email, address)
+                    .then(function (order) {
+                        return res.json(order);
+                    })
+                    .catch(function (err) {
+                        return errorHandler(res, err);
+                    });
+            })
+            .catch(function (err) {
+                return errorHandler(res, err);
+            });
+    });
+
 
     return router;
 };

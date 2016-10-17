@@ -17,12 +17,10 @@ module.exports = function (db) {
     };
 
     CouponRepository.getCouponByCustomerId = function(customerId) {
-        console.log(customerId);
         return db('cart')
             .select('*')
             .where('customer_id', customerId)
             .then(function(cartCoupons) {
-                console.log(JSON.stringify(cartCoupons));
                 if(!cartCoupons[0]) {
                     return {};
                 }
@@ -32,6 +30,10 @@ module.exports = function (db) {
                         return coupon;
                     });
             })
+    };
+
+    CouponRepository.decreaseCouponQuantity = function(coupon) {
+
     };
 
     return CouponRepository;
