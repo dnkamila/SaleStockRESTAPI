@@ -36,16 +36,14 @@ function truncateTables() {
     var promise = Promise.resolve();
     TRUNCATE_TABLES.forEach(function(table) {
         return promise.then(function() {
-            console.log(`truncate table ${table}`);
-            return db.raw(`TRUNCATE ${table} CASCADE`);
+            console.log("truncate table " + table);
+            return db.raw("TRUNCATE " + table + " CASCADE");
         });
     });
     return promise;
 }
 
-describe('SaleStock REST API', function() {
-    this.timeout(3000);
-
+describe('SaleStockRESTAPI', function() {
     beforeEach(function(done) {
         return truncateTables()
             .then(function() {
@@ -54,21 +52,73 @@ describe('SaleStock REST API', function() {
     });
 
     describe('Cart', function() {
-        it('should return empty cart item', function(done) {
-            var params = {customerId:1};
+        it('should return empty cart detail', function(done) {
+            var params = {
+                "id": 1,
+                "name": "kamila"
+            };
+
+            var expected = {
+                "id": 1,
+                "name": "kamila"
+            };
 
             return request(app)
-                .get(`/cart/getItems/${params.customerId}`)
+                .get('/cart/' + params.id)
                 .expect(200)
-                .expect([], done);
+                .expect(function(res) {
+                    var data = res.body;
+
+                    assert.equal(data.customer.id, expected.id);
+                    assert.equal(data.customer.name, expected.name);
+                    assert.equal(data.coupon, {});
+                    assert.equal(data.cart_item, []);
+                    assert.equal(data.subtotal, 0);
+                    assert.equal(data.discount, 0);
+                    assert.equal(data.total, 0);
+                }, done);
         });
 
         it('should return the cart item just created', function(done) {
-            var params = {customerId:1, productId:1, quantity:2};
+             var params = {
+                 "customerId": 1,
+                 "productId": 1,
+                 "quantity": 2
+             };
 
-            var customerId = null;
-            var productId = null;
-            var quantity = null;
+            var expectedAddItem = {
+                "customer": {
+                    "id": "1",
+                    "name": "kamila"
+                },
+                "product": {
+                    "id": "1",
+                    "name": "adidas all star",
+                    "price": 1250000,
+                    "stock": 25
+                },
+                "quantity": 2
+            };
+
+            var expectedGetCart = {
+                "customer": {
+                    "id": "1",
+                    "name": "kamila"
+                },
+                "coupon": {},
+                "cart_item": [
+                    {
+                        "id": "1",
+                        "name": "adidas all star",
+                        "price": 1250000,
+                        "stock": 25,
+                        "quantity": 2
+                    }
+                ],
+                "subtotal": 2500000,
+                "discount": 0,
+                "total": 2500000
+            };
 
             async.series([
                 function(rs) {
@@ -76,93 +126,35 @@ describe('SaleStock REST API', function() {
                         .post('/cart/addItem').send(qs.stringify(params))
                         .expect(200)
                         .expect(function(res) {
-                            var body = res.body;
+                            var data = res.body;
 
-                            customerId = body.customer_id;
-                            productId = body.product_id;
-
-                            assert.equal(customerId, params.customerId);
-                            assert.equal(productId, params.productId);
-                            assert.equal(body.quantity, params.quantity);
+                            assert.equal(data.customer.id, expectedAddItem.customer.id);
+                            assert.equal(data.customer.name, expectedAddItem.customer.name);
+                            assert.equal(data.product.id, expectedAddItem.product.id);
+                            assert.equal(data.product.name, expectedAddItem.product.name);
+                            assert.equal(data.product.price, expectedAddItem.product.price);
+                            assert.equal(data.product.stock, expectedAddItem.product.stock);
+                            assert.equal(data.quantity, expectedAddItem.quantity);
                         })
                         .end(rs);
                 },
                 function(rs) {
                     return request(app)
-                        .get(`/cart/getItem/${customerId}/${productId}`)
+                        .get('/cart/' + productId)
                         .expect(200)
                         .expect(function(res) {
-                            var body = res.body;
+                            var data = res.body;
 
-                            customerId = body.customer_id;
-                            productId = body.product_id;
-                            quantity = body.quantity;
-
-                            assert.equal(customerId, params.customerId);
-                            assert.equal(productId, params.productId);
-                            assert.equal(quantity, params.quantity);
-                        })
-                        .end(rs);
-                }
-            ], done);
-        });
-
-        it('should return empty cart coupon', function(done) {
-            var params = {customerId:1, couponId:1};
-
-            return request(app)
-                .get(`/cart/getCoupon/${params.customerId}`)
-                .expect(200)
-                .expect({}, done);
-        });
-
-        it('should return the cart coupon just created', function(done) {
-            var params = {customerId:1, couponId:1};
-
-            var customerId = null;
-            var couponId = null;
-
-            /*return request(app)
-                .post('/cart/addCoupon').send(qs.stringify(params))
-                .expect(200)
-                .expect(function(res) {
-                    var body = res.body;
-
-                    customerId = body.customer_id;
-                    couponId = body.coupon_id;
-
-                    assert.equal(customerId, params.customerId);
-                    assert.equal(couponId, params.couponId);
-                }, done);*/
-
-            async.series([
-                function(rs) {
-                    return request(app)
-                        .post('/cart/addCoupon').send(qs.stringify(params))
-                        .expect(200)
-                        .expect(function(res) {
-                            var body = res.body;
-
-                            customerId = body.customer_id;
-                            couponId = body.coupon_id;
-
-                            assert.equal(customerId, params.customerId);
-                            assert.equal(couponId, params.couponId);
-                        })
-                        .end(rs);
-                },
-                function(rs) {
-                    return request(app)
-                        .get(`/cart/getCoupon/${customerId}`)
-                        .expect(200)
-                        .expect(function(res) {
-                            var body = res.body;
-
-                            customerId = body.customer_id;
-                            couponId = body.coupon_id;
-
-                            assert.equal(customerId, params.customerId);
-                            assert.equal(couponId, params.couponId);
+                            assert.equal(data.customer.id, expectedGetCart.customer.id);
+                            assert.equal(data.customer.name, expectedGetCart.customer.name);
+                            assert.equal(data.coupon, {});
+                            assert.equal(data.subtotal, expectedGetCart.subtotal);
+                            assert.equal(data.discount, expectedGetCart.discount);
+                            assert.equal(data.total, expectedGetCart.total);
+                            assert.equal(data.cart_item.id, expectedAddItem.cart_item.id);
+                            assert.equal(data.cart_item.name, expectedAddItem.cart_item.name);
+                            assert.equal(data.cart_item.price, expectedAddItem.cart_item.price);
+                            assert.equal(data.cart_item.stock, expectedAddItem.cart_item.stock);
                         })
                         .end(rs);
                 }
