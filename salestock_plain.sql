@@ -281,8 +281,7 @@ ALTER TABLE ONLY product ALTER COLUMN id SET DEFAULT nextval('product_id_seq'::r
 -- Data for Name: cart; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY cart (customer_id, coupon_id) FROM stdin;
-\.
+
 
 
 --
@@ -291,8 +290,7 @@ COPY cart (customer_id, coupon_id) FROM stdin;
 -- Data for Name: cart_item; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY cart_item (customer_id, product_id, quantity) FROM stdin;
-\.
+
 
 
 --
@@ -301,8 +299,7 @@ COPY cart_item (customer_id, product_id, quantity) FROM stdin;
 -- Data for Name: coupon; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY coupon (id, name, start_valid_date, end_valid_date, stock, type, amount) FROM stdin;
-\.
+
 
 
 --
@@ -320,8 +317,7 @@ SELECT pg_catalog.setval('coupon_id_seq', 1, false);
 -- Data for Name: customer; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY customer (id, name, phone, email, address) FROM stdin;
-\.
+
 
 
 --
@@ -339,8 +335,7 @@ SELECT pg_catalog.setval('customer_id_seq', 1, false);
 -- Data for Name: order; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY "order" (id, customer_id, coupon_id, status, order_date, name, phone, email, address, proof) FROM stdin;
-\.
+
 
 
 --
@@ -358,8 +353,6 @@ SELECT pg_catalog.setval('order_id_seq', 1, false);
 -- Data for Name: order_item; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY order_item (order_id, product_id, quantity) FROM stdin;
-\.
 
 
 --
@@ -368,8 +361,7 @@ COPY order_item (order_id, product_id, quantity) FROM stdin;
 -- Data for Name: product; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY product (id, name, price, stock) FROM stdin;
-\.
+
 
 
 --
@@ -383,7 +375,7 @@ SELECT pg_catalog.setval('product_id_seq', 1, false);
 
 --
 -- TOC entry 1906 (class 2606 OID 17210)
--- Name: cart_item_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: cart_item_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace:
 --
 
 ALTER TABLE ONLY cart_item
@@ -392,7 +384,7 @@ ALTER TABLE ONLY cart_item
 
 --
 -- TOC entry 1904 (class 2606 OID 17195)
--- Name: cart_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: cart_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace:
 --
 
 ALTER TABLE ONLY cart
@@ -401,7 +393,7 @@ ALTER TABLE ONLY cart
 
 --
 -- TOC entry 1902 (class 2606 OID 17190)
--- Name: coupon_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: coupon_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace:
 --
 
 ALTER TABLE ONLY coupon
@@ -410,7 +402,7 @@ ALTER TABLE ONLY coupon
 
 --
 -- TOC entry 1896 (class 2606 OID 17174)
--- Name: customer_email_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: customer_email_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace:
 --
 
 ALTER TABLE ONLY customer
@@ -419,7 +411,7 @@ ALTER TABLE ONLY customer
 
 --
 -- TOC entry 1898 (class 2606 OID 17172)
--- Name: customer_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: customer_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace:
 --
 
 ALTER TABLE ONLY customer
@@ -428,7 +420,7 @@ ALTER TABLE ONLY customer
 
 --
 -- TOC entry 1910 (class 2606 OID 17243)
--- Name: order_item_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: order_item_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace:
 --
 
 ALTER TABLE ONLY order_item
@@ -437,7 +429,7 @@ ALTER TABLE ONLY order_item
 
 --
 -- TOC entry 1908 (class 2606 OID 17228)
--- Name: order_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: order_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace:
 --
 
 ALTER TABLE ONLY "order"
@@ -446,7 +438,7 @@ ALTER TABLE ONLY "order"
 
 --
 -- TOC entry 1900 (class 2606 OID 17182)
--- Name: product_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: product_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace:
 --
 
 ALTER TABLE ONLY product
@@ -543,3 +535,9 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 -- PostgreSQL database dump complete
 --
 
+INSERT INTO customer(name, phone, email, address) VALUES ('kamila', '081385935613', 'dnkamila@gmail.com', 'Indonesia');
+INSERT INTO customer(name, phone, email, address) VALUES ('kameliya', '081385935614', 'kameliyahani@gmail.com', 'Indonesia');
+INSERT INTO product(name, price, stock) VALUES ('adidas all star', 1250000, 25);
+INSERT INTO product(name, price, stock) VALUES ('celana pendek trendy', 150000, 20);
+INSERT INTO coupon(name, start_valid_date, end_valid_date, stock, type, amount) VALUES ('hemat dikit', '2016-10-01', '2016-12-01', 10, 'percentage', 15);
+INSERT INTO coupon(name, start_valid_date, end_valid_date, stock, type, amount) VALUES ('untung ada diskon', '2016-10-01', '2016-12-01', 10, 'nominal', 150000);
