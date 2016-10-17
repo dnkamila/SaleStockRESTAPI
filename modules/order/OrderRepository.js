@@ -93,7 +93,7 @@ module.exports = function (db) {
                 order.order = {
                     "id": data[0].id,
                     "status": data[0].status,
-                    "order_date": data[0].order_date,
+                    "order_date": util.getStandardDate(data[0].order_date),
                     "name": data[0].name,
                     "phone": data[0].phone,
                     "email": data[0].email,
