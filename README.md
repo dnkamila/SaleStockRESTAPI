@@ -17,3 +17,6 @@ Missing
 [] endpoint API for submit payment proof (PUT /order/submitPaymentProof)
     in the planning, proof is saved as url
 [] testing for Order API
+
+Tested in
+14.04.1-Ubuntu x86_64 GNU/Linux
