@@ -1,3 +1,23 @@
 Order Transaction
 
 API
+
+POST    /cart/addItem
+    req {"customerId":, "productId", "quantity"}
+    res
+        DuplicateResource
+        {
+            "customer":
+            {
+                "id":
+                "name":
+            },
+            "product":
+            {
+                "id":
+                "name":
+                "price":
+                "stock":
+            },
+            "quantity":
+        }
