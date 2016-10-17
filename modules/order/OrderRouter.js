@@ -45,5 +45,27 @@ module.exports = function (OrderManager) {
             });
     });
 
+    router.put('/:orderId/:status', function(req, res) {
+        req.checkParams('orderId', 'orderId is required and must be an integer').notEmpty().isInt();
+        req.checkParams('status', 'status is required').notEmpty();
+
+        req.asyncValidationErrors()
+            .then(function() {
+                var orderId = req.params.orderId;
+                var status = req.params.status;
+
+                return OrderManager.updateStatus(orderId, status)
+                    .then(function (order) {
+                        return res.json(order);
+                    })
+                    .catch(function (err) {
+                        return errorHandler(res, err);
+                    });
+            })
+            .catch(function (err) {
+                return errorHandler(res, err);
+            });
+    });
+
     return router;
 };

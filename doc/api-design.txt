@@ -108,9 +108,9 @@ GET     /order/customer
 ==========================================================================
 
 GET     /order/status
-    req {status}
+    req {"status"}
     res 
-        IllegalArgument('Status status Not Exist')
+        IllegalArgument
         {
             "status": "submitted",
             "orders": 
@@ -123,3 +123,18 @@ GET     /order/status
         }
     notes
         * status = {submitted, shipped, delivered, invalid}
+
+==========================================================================
+
+PUT     /order/status
+    req {"orderId", "status"}
+    res 
+        ResourceNotFound
+        IllegalArgument
+        {
+            "id":
+            "status":
+            "order_date"
+        }
+    notes
+        * status = {shipped, invalid}        

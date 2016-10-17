@@ -57,5 +57,27 @@ module.exports = function (db) {
             });
     };
 
+    OrderRepository.updateStatus = function(orderId, status) {
+        return db('order')
+            .update('status', status)
+            .where('id', orderId)
+            .returning(['id'])
+            .then(function(orderId) {
+                return getOrderByOrderId(orderId)
+                    .then(function(order) {
+                        return order;
+                    });
+            });
+    };
+
+    function getOrderByOrderId(orderId) {
+        return db('order')
+            .select('id', 'status', 'order_date')
+            .then(function(orders) {
+                orders[0].order_date = util.getStandardDate(orders[0].order_date);
+                return orders[0];
+            });
+    }
+
     return OrderRepository;
 };
