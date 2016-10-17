@@ -104,3 +104,22 @@ GET     /order/customer
                 }
             ]
         }
+
+==========================================================================
+
+GET     /order/status
+    req {status}
+    res 
+        IllegalArgument('Status status Not Exist')
+        {
+            "status": "submitted",
+            "orders": 
+            [
+                {
+                  "id":
+                  "order_date":
+                }
+            ]
+        }
+    notes
+        * status = {submitted, shipped, delivered, invalid}

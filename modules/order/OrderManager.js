@@ -7,5 +7,9 @@ module.exports = function(OrderRepository) {
         return OrderRepository.getOrdersByCustomerId(customerId);
     };
 
+    OrderManager.getOrdersByStatus = function(customerId) {
+        return OrderRepository.getOrdersByStatus(customerId);
+    };
+
     return OrderManager;
 };

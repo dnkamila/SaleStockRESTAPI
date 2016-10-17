@@ -25,5 +25,25 @@ module.exports = function (OrderManager) {
             });
     });
 
+    router.get('/status/:status', function(req, res) {
+        req.checkParams('status', 'status is required').notEmpty();
+
+        req.asyncValidationErrors()
+            .then(function() {
+                var status = req.params.status;
+
+                return OrderManager.getOrdersByStatus(status)
+                    .then(function(orders) {
+                        return res.json(orders);
+                    })
+                    .catch(function(err) {
+                        return errorHandler(res, err);
+                    });
+            })
+            .catch(function(err) {
+                return errorHandler(res, err);
+            });
+    });
+
     return router;
 };

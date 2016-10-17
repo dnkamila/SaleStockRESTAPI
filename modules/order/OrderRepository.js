@@ -22,17 +22,38 @@ module.exports = function (db) {
                     .where('customer_id', customerId)
                     .then(function(data) {
                             orders.orders = _.reduce(data, function(arr, item) {
-                            arr.push({
-                                "id": item.id,
-                                "order_date": util.getStandardDate(item.order_date),
-                                "status": item.status
-                            });
+                                arr.push({
+                                    "id": item.id,
+                                    "order_date": util.getStandardDate(item.order_date),
+                                    "status": item.status
+                                });
 
-                            return arr;
-                        }, []);
+                                return arr;
+                            }, []);
 
                         return orders;
                     });
+            });
+    };
+
+    OrderRepository.getOrdersByStatus = function(status) {
+        var orders = {};
+
+        return db('order')
+            .select('id', 'order_date')
+            .where('status', status)
+            .then(function(data) {
+                orders.status = status;
+                orders.orders = _.reduce(data, function(arr, item) {
+                    arr.push({
+                        "id": item.id,
+                        "order_date": util.getStandardDate(item.order_date)
+                    });
+
+                    return arr;
+                }, []);
+
+                return orders;
             });
     };
 
